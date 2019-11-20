@@ -136,8 +136,8 @@ In essense, `import_module()` is a thin wrapper over `source()` with `local()`. 
 
 * If `name` is missing (default), `import_module()` will use the R file name as the module name when attaching it to the search path or creating an object in the current environment. If `name` is provided, its value will be used.
 * Setting `attach = FALSE` (default) will automatically create an R object in the current environment. Alternatively, setting `attach = TRUE` will automatically attach the module to the search path as `module:[name]`.
-* Seeting `deep = TRUE` will allow `import_module()` to load a module that `source()` other R scripts inside it. This behavior is useful when using ["deep" module](#advanced-deep-module). Using `deep` is allowed for _local use only_.
-* Setting `quietly = TRUE` will prevent `import_module()` from printing a message at the end for a successful import. This behavior is useful when using ["deep" module](#advanced-deep-module).
+* Seeting `deep = TRUE` will allow `import_module()` to load a module that `source()` other R scripts inside it. This behavior is useful when using ["deep" module](#deep-module). Using `deep` is allowed for _local use only_.
+* Setting `quietly = TRUE` will prevent `import_module()` from printing a message at the end for a successful import. This behavior is useful when using ["deep" module](#deep-module).
 * To avoid overwriting existing modules and objects, `import_module()` first inspects the current environment (if `attach = FALSE`) or the search path (if `attach = TRUE`). If the module with the same name already exists, `import_module()` will return an error.
 
 Also see the documentation for quick reference.
