@@ -65,6 +65,8 @@ list(
 )
 ```
 
+The only requirement here is that the module script ends with a `list` of R functions and objects to export.
+
 :sparkles: **And that's it!** :sparkles:
 
 ### How it works
@@ -127,16 +129,16 @@ source("https://tinyurl.com/r-module/import_module.R")
 
 This adds to the global environment the following two functions:
 
-* `import_module(path, name, attach = TRUE, deep = FALSE, quietly = FALSE)` to import an R module
+* `import_module(path, name, attach = FALSE, deep = FALSE, quietly = FALSE)` to import an R module
 * `import_module_help()` to display documentation for `import_module()`
 
 In essense, `import_module()` is a thin wrapper over `source()` with `local()`. But it also provides the following convenience features:
 
 * If `name` is missing (default), `import_module()` will use the R file name as the module name when attaching it to the search path or creating an object in the current environment. If `name` is provided, its value will be used.
-* Setting `attach = TRUE` (default) will automatically attach the module to the search path as `module:[name]`. Alternatively, `attach = FALSE` will automatically create an R object in the current environment.
+* Setting `attach = FALSE` (default) will automatically create an R object in the current environment. Alternatively, setting `attach = TRUE` will automatically attach the module to the search path as `module:[name]`.
 * Seeting `deep = TRUE` will allow `import_module()` to load a module that `source()` other R scripts inside it. This behavior is useful when using ["deep" module](#advanced-deep-module). Using `deep` is allowed for _local use only_.
 * Setting `quietly = TRUE` will prevent `import_module()` from printing a message at the end for a successful import. This behavior is useful when using ["deep" module](#advanced-deep-module).
-* To avoid overwriting existing modules and objects, `import_module()` first inspects the search path (if `attach = TRUE`) or the environment (if `attach = FALSE`). If the module with the same name already exists, `import_module()` will return an error.
+* To avoid overwriting existing modules and objects, `import_module()` first inspects the current environment (if `attach = FALSE`) or the search path (if `attach = TRUE`). If the module with the same name already exists, `import_module()` will return an error.
 
 Also see the documentation for quick reference.
 
@@ -152,28 +154,30 @@ With `import_module()`, the example above can be rewritten as follows:
 
 source("https://tinyurl.com/r-module/import_module.R")
 import_module("module.R")
-#> Note: 'module' now attached as 'module:module'
-
-hello_world()
-#> [1] "Hello world!"
-
-greet_to("friend")
-#> [1] "Hi, friend. Using modules in R is easy!"
-```
-
-To mirror the original behavior more closely, we should set `attach = FALSE`:
-
-```r
-# main.R
-
-source("https://tinyurl.com/r-module/import_module.R")
-import_module("module.R", attach = FALSE)
 #> Note: 'module' now available in the current environment
 
 module$hello_world()
 #> [1] "Hello world!"
 
 module$greet_to("friend")
+#> [1] "Hi, friend. Using modules in R is easy!"
+```
+
+To mirror the original behavior more closely, we can set `quietly = FALSE` to turn off the message. In my view, seeing the message can be helpful especially when working interactively.
+
+We can also attach the module to the search path by setting `attach = TRUE`.
+
+```r
+# main.R
+
+source("https://tinyurl.com/r-module/import_module.R")
+import_module("module.R", attach = TRUE)
+#> Note: 'module' now attached as 'module:module'
+
+hello_world()
+#> [1] "Hello world!"
+
+greet_to("friend")
 #> [1] "Hi, friend. Using modules in R is easy!"
 ```
 
@@ -210,14 +214,16 @@ function(name) {
 }
 ```
 
-On the other hand, `greet/main.R` serves as a module entrypoint script. Using `import_module()`, we can register module functions into `greet/main.R`.
+Note that here we do not create a `list` to export since each script only has one default function to export.
+
+Now, on the other hand, `greet/main.R` serves as a module entrypoint script. Using `import_module()`, we can register module functions into `greet/main.R`.
 
 ```r
 # greet/main.R
 
 # import submodules
-import_module("hello_world.R", attach = FALSE, quietly = TRUE)
-import_module("greet_to.R", attach = FALSE, quietly = TRUE)
+import_module("hello_world.R", quietly = TRUE)
+import_module("greet_to.R", quietly = TRUE)
 
 # export
 list(
@@ -236,9 +242,9 @@ Now that the module is ready, we can import and use it outside `greet/`. With `i
 source("https://tinyurl.com/r-module/import_module.R")
 
 import_module("greet/main.R", deep = TRUE)
-#> Note: 'greet' now attached as 'module:greet'
+#> Note: 'greet' now available in the current environment
 
-hello_world()
+greet$hello_world()
 #> [1] "Hello world!"
 ```
 
