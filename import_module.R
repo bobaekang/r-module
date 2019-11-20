@@ -8,8 +8,8 @@
 #' 
 #' @param path A character string for the path to a module file.
 #' @param name A character string for an optional module name.
-#' @param attach A logical value. If \code{attach = TRUE} (default), attach
-#'  module to the search path. If \code{attach = FALSE}, create a module object
+#' @param attach A logical value. If \code{attach = TRUE}, attach module to
+#'  the search path. If \code{attach = FALSE} (default), create a module object
 #'  in the global environment.
 #' @param deep A logical value. If \code{deep = TRUE}, allow hierachical
 #'  structure for module. Local use only.
@@ -18,8 +18,8 @@
 #' @seealso \code{\link[base]{assign}} for assigning a value to name.
 #' @examples
 #' # import a local module
-#' import_module("module.R")                            # attach to search path
-#' import_module("module.R", attach = FALSE)            # assign to a name
+#' import_module("module.R")                            # assign to a name
+#' import_module("module.R", attach = TRUE)             # attach to search path
 #' import_module("module.R", name = "awesome_module")   # pick a name
 #' 
 #' # import a remote module
@@ -32,7 +32,7 @@
 import_module <- function(
   path,
   name,
-  attach = TRUE,
+  attach = FALSE,
   deep = FALSE,
   quietly = FALSE
 ) {
