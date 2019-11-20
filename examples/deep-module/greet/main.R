@@ -1,6 +1,6 @@
 # import submodules
-import_module("hello_world.R", attach = FALSE, quietly = TRUE)
-import_module("greet_to.R", attach = FALSE, quietly = TRUE)
+import_module("hello_world.R", quietly = TRUE)
+import_module("greet_to.R", quietly = TRUE)
 
 # export
 list(
