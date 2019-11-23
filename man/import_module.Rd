@@ -4,8 +4,14 @@
 \alias{import_module}
 \title{Import an R "module"}
 \usage{
-import_module(path, name, attach = FALSE, deep = FALSE,
-  quietly = FALSE)
+import_module(
+  path,
+  name,
+  attach = FALSE,
+  deep = FALSE,
+  force = FALSE,
+  quietly = FALSE
+)
 }
 \arguments{
 \item{path}{A character string for the path to a module file.}
@@ -18,6 +24,9 @@ in the global environment.}
 
 \item{deep}{A logical value. If \code{deep = TRUE}, allow hierachical
 structure for module. Local use only.}
+
+\item{force}{A logical value. If \code{force = TRUE}, force to import
+a module even if another with the same name already exists.}
 
 \item{quitely}{A logical value. If \code{quitely = TRUE}, skip message.}
 }

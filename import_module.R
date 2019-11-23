@@ -13,6 +13,8 @@
 #'  in the global environment.
 #' @param deep A logical value. If \code{deep = TRUE}, allow hierachical
 #'  structure for module. Local use only.
+#' @param force A logical value. If \code{force = TRUE}, force to import
+#'  a module even if another with the same name already exists.
 #' @param quitely A logical value. If \code{quitely = TRUE}, skip message.
 #' @seealso \code{\link[base]{attach}} for attaching R object to search path.
 #' @seealso \code{\link[base]{assign}} for assigning a value to name.
@@ -34,6 +36,7 @@ import_module <- function(
   name,
   attach = FALSE,
   deep = FALSE,
+  force = FALSE,
   quietly = FALSE
 ) {
   # sanity checks
@@ -67,14 +70,18 @@ import_module <- function(
   if (attach) {
     mod_name <- paste0("module:", name)
     
-    if (mod_name %in% search())
-      stop("'", mod_name, "' already attached. Use detach() if needed.")
+    if (mod_name %in% search()) {
+      if (force) {
+        do.call("detach", list(mod_name))
+      } else
+        stop("'", mod_name, "' already attached. Use detach() if needed.")
+    }
     
     attach(what = mod, name = mod_name)
       
     msg <- paste0("Note: '", name, "' now attached as '", mod_name, "'")
   } else {
-    if (exists(name))
+    if (exists(name) && !force)
       stop("object '", name, "' already exists. Use remove() if needed.")
     
     assign(x = name, value = mod, envir = parent.frame())
