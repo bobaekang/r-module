@@ -4,7 +4,9 @@
 
 This repository explains how to use modules in R and provides examples and a helper function.
 
-This is the latest iteration of the same core idea. Find my previous attempt at it in [this repository](https://github.com/bobaekang/r-module-trick).
+This is the latest iteration of the same core idea. Read my blog post ["My journey to finding R modules"](https://bobaekang.com/blog/my-journey-to-finding-r-modules/) to learn how this idea has developed into the current implementation. Also, find my previous attempt at it in [this repository](https://github.com/bobaekang/r-module-trick). 
+
+
 
 ## Table of contents
 
